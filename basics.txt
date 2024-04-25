@@ -1,0 +1,88 @@
+mysql> CREATE DATABASE view_5;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE view_5;
+Database changed
+mysql> CREATE TABLE a6_info(
+    -> roll_no INT,
+    -> name VARCHAR(20),
+    -> cs_lang VARCHAR(20),
+    -> PRIMARY KEY(roll_no));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO a3_info VALUES(
+    -> 1,'RAJ','SQL'),
+    -> (2,'NIRAJ','DSA'),
+    -> (3,'ISHWARI','JAVA'),
+    -> (4,'CHAITALI','PYTHON');
+ERROR 1146 (42S02): Table 'view_5.a3_info' doesn't exist
+mysql> INSERT INTO a6_info VALUES
+    -> (1,'RAJ','SQL'),
+    -> (2,'NIRAJ','DSA'),
+    -> (3,'ISHWARI','JAVA'),
+    -> (4,'CHAITALI','PYTHON');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM a6_info;
++---------+----------+---------+
+| roll_no | name     | cs_lang |
++---------+----------+---------+
+|       1 | RAJ      | SQL     |
+|       2 | NIRAJ    | DSA     |
+|       3 | ISHWARI  | JAVA    |
+|       4 | CHAITALI | PYTHON  |
++---------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE VIEW temp AS SELECT roll_no, cs_lang FROM a6_info;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW TABLES;
++------------------+
+| Tables_in_view_5 |
++------------------+
+| a6_info          |
+| temp             |
++------------------+
+2 rows in set (0.02 sec)
+
+mysql> SELECT * FROM temp;
++---------+---------+
+| roll_no | cs_lang |
++---------+---------+
+|       1 | SQL     |
+|       2 | DSA     |
+|       3 | JAVA    |
+|       4 | PYTHON  |
++---------+---------+
+4 rows in set (0.01 sec)
+
+mysql> UPDATE temp SET cs_lang='ANGULAR' WHERE roll_no=1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM temp;
++---------+---------+
+| roll_no | cs_lang |
++---------+---------+
+|       1 | ANGULAR |
+|       2 | DSA     |
+|       3 | JAVA    |
+|       4 | PYTHON  |
++---------+---------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER VIEW temp AS SELECT name FROM a6_info;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM temp;
++----------+
+| name     |
++----------+
+| RAJ      |
+| NIRAJ    |
+| ISHWARI  |
+| CHAITALI |
++----------+
+4 rows in set (0.00 sec)

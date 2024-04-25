@@ -1,0 +1,118 @@
+
+mysql> CREATE DATABASE assgn_2;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE assgn_2;
+Database changed
+mysql> CREATE TABLE name(
+    -> roll_no INT NOT NULL,
+    -> name VARCHAR(20) NOT NULL,
+    -> PRIMARY KEY(roll_no));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO name VALUES
+    -> (1,'RAJ'),
+    -> (2,'NIRAJ'),
+    -> (3,'ISHWARI'),
+    -> (4,'CHAITALI');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM name;
++---------+----------+
+| roll_no | name     |
++---------+----------+
+|       1 | RAJ      |
+|       2 | NIRAJ    |
+|       3 | ISHWARI  |
+|       4 | CHAITALI |
++---------+----------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE submission(
+    -> sr_no INT,
+    -> assgn_id VARCHAR(20),
+    -> roll_no INT,
+    -> PRIMARY KEY(sr_no));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO submission VALUES(
+    -> 1,'XXXY',1),
+    -> (2,'XXYX',2),
+    -> (3,'XYXX',3),
+    -> (4,'YXXX',4);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM submission;
++-------+----------+---------+
+| sr_no | assgn_id | roll_no |
++-------+----------+---------+
+|     1 | XXXY     |       1 |
+|     2 | XXYX     |       2 |
+|     3 | XYXX     |       3 |
+|     4 | YXXX     |       4 |
++-------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER TABLE submission ADD FOREIGN KEY (roll_no) REFERENCES name(roll
+_no);
+Query OK, 4 rows affected (0.05 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> desc submission;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| sr_no    | int         | NO   | PRI | NULL    |       |
+| assgn_id | varchar(20) | YES  |     | NULL    |       |
+| roll_no  | int         | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM name,submission WHERE name.roll_no=submission.roll_no;
++---------+----------+-------+----------+---------+
+| roll_no | name     | sr_no | assgn_id | roll_no |
++---------+----------+-------+----------+---------+
+|       1 | RAJ      |     1 | XXXY     |       1 |
+|       2 | NIRAJ    |     2 | XXYX     |       2 |
+|       3 | ISHWARI  |     3 | XYXX     |       3 |
+|       4 | CHAITALI |     4 | YXXX     |       4 |
++---------+----------+-------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM name JOIN submission WHERE name.roll_no=submission.roll
+_no;
++---------+----------+-------+----------+---------+
+| roll_no | name     | sr_no | assgn_id | roll_no |
++---------+----------+-------+----------+---------+
+|       1 | RAJ      |     1 | XXXY     |       1 |
+|       2 | NIRAJ    |     2 | XXYX     |       2 |
+|       3 | ISHWARI  |     3 | XYXX     |       3 |
+|       4 | CHAITALI |     4 | YXXX     |       4 |
++---------+----------+-------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM name LEFT JOIN submission ON name.roll_no=submission.ro
+ll_no;
++---------+----------+-------+----------+---------+
+| roll_no | name     | sr_no | assgn_id | roll_no |
++---------+----------+-------+----------+---------+
+|       1 | RAJ      |     1 | XXXY     |       1 |
+|       2 | NIRAJ    |     2 | XXYX     |       2 |
+|       3 | ISHWARI  |     3 | XYXX     |       3 |
+|       4 | CHAITALI |     4 | YXXX     |       4 |
++---------+----------+-------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM name RIGHT JOIN submission ON name.roll_no=submission.r
+oll_no;
++---------+----------+-------+----------+---------+
+| roll_no | name     | sr_no | assgn_id | roll_no |
++---------+----------+-------+----------+---------+
+|       1 | RAJ      |     1 | XXXY     |       1 |
+|       2 | NIRAJ    |     2 | XXYX     |       2 |
+|       3 | ISHWARI  |     3 | XYXX     |       3 |
+|       4 | CHAITALI |     4 | YXXX     |       4 |
++---------+----------+-------+----------+---------+
+4 rows in set (0.00 sec)

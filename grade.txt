@@ -1,0 +1,45 @@
+mysql> CREATE DATABASE grade1;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE grade1;
+Database changed
+mysql> delimiter //
+mysql> CREATE FUNCTION funclass(marks integer) RETURNS VARCHAR(20) NO SQL
+    -> BEGIN
+    -> DECLARE S_result VARCHAR(20);
+    -> IF (marks>=990 AND marks<=1500)
+    -> then
+    -> SET S_result = 'DISTINCTION';
+    -> ELSEIF (marks>=900 AND marks<=989)
+    -> then
+    -> SET S_result = 'FIRST CLASS';
+    -> ELSEIF (marks>=825 AND marks<=899)
+    -> then
+    -> SET S_result = 'HIGHER SECOND CLASS';
+    -> ELSE
+    -> SET S_result = 'FAIL';
+    -> END IF;
+    -> RETURN S_result;
+    -> END;
+    -> //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> SELECT funclass(1000);
++----------------+
+| funclass(1000) |
++----------------+
+| DISTINCTION    |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> delimiter ;
+mysql> SELECT funclass(875);
++---------------------+
+| funclass(875)       |
++---------------------+
+| HIGHER SECOND CLASS |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql>

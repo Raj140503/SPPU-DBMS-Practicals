@@ -1,0 +1,114 @@
+
+
+mysql> drop database tg;
+Query OK, 2 rows affected (0.16 sec)
+
+mysql> create database tg;
+Query OK, 1 row affected (1.25 sec)
+
+mysql> use tg;
+Database changed
+mysql> create table lib_book(bid int , bname varchar(20), qty int);
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> create table lib_audit(bid int , bname varchar(20) , qty int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into lib_book values(1,'secrete',10),(2,'mysql',20),(3,'mariadb',30),(4,'nosql',40);
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from lib_book;
++------+---------+------+
+| bid  | bname   | qty  |
++------+---------+------+
+|    1 | secrete |   10 |
+|    2 | mysql   |   20 |
+|    3 | mariadb |   30 |
+|    4 | nosql   |   40 |
++------+---------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from lib_audit;
+Empty set (0.00 sec)
+
+mysql> drop trigger if exists Make_audit1;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> delimiter //
+mysql> create trigger Make_audit1
+    -> after delete ON lib_book
+    -> for each row
+    -> begin
+    -> insert into lib_audit(bid,bname,qty)
+    -> values(OLD.bid,OLD.bname,OLD.qty);
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delete from lib_book where bid=4 or bid=2;
+    -> //
+Query OK, 2 rows affected (0.02 sec)
+
+mysql> select * from lib_book;
+    -> //
++------+---------+------+
+| bid  | bname   | qty  |
++------+---------+------+
+|    1 | secrete |   10 |
+|    3 | mariadb |   30 |
++------+---------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from lib_audit;
+    -> //
++------+-------+------+
+| bid  | bname | qty  |
++------+-------+------+
+|    2 | mysql |   20 |
+|    4 | nosql |   40 |
++------+-------+------+
+2 rows in set (0.00 sec)
+
+mysql> drop trigger if exists Make_audit2;
+    -> //
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> delimiter //
+mysql> create trigger Make_audit2
+    -> after update ON lib_book
+    -> for each row
+    -> begin
+    -> insert into lib_audit(bid,bname,qty)
+    -> values(OLD.bid,OLD.bname,OLD.qty);
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> update lib_book set qty=100 where bname ='secrete';
+    -> //
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from lib_book;
+    -> //
++------+---------+------+
+| bid  | bname   | qty  |
++------+---------+------+
+|    1 | secrete |  100 |
+|    3 | mariadb |   30 |
++------+---------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from lib_audit;
+    -> //
++------+---------+------+
+| bid  | bname   | qty  |
++------+---------+------+
+|    2 | mysql   |   20 |
+|    4 | nosql   |   40 |
+|    1 | secrete |   10 |
++------+---------+------+
+3 rows in set (0.00 sec)
+
+mysql>

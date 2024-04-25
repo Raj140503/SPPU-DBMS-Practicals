@@ -1,0 +1,30 @@
+CREATE DATABASE circle;
+USE circle;
+
+CREATE TABLE area(
+    radius INT,
+    area DECIMAL(10, 2)
+);
+
+
+DELIMITER //
+
+CREATE PROCEDURE calculatearea()
+BEGIN
+    DECLARE radius INT;
+    DECLARE area DECIMAL(10, 2);
+    SET radius = 5;
+
+    WHILE radius <= 9 DO
+        SET area = PI() * POW(radius, 2); 
+        INSERT INTO areas (radius, area) VALUES (radius, area);
+        SET radius = radius + 1;
+    END WHILE;
+END;
+//
+DELIMITER ;
+
+CALL calculatearea();
+
+
+SELECT * FROM areas;

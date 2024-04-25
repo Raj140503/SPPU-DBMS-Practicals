@@ -1,0 +1,98 @@
+mysql> create database b1;
+Query OK, 1 row affected (0.13 sec)
+
+mysql> use b1;
+Database changed
+mysql> create table n_rollcall(rollno int , name varchar(30));
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> create table o_rollcall(rollno int,name varchar(30));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> insert into n_rollcall values (1,"shweta"),(2,"vaish"),(3,"priya"),(4,"shiva");
+Query OK, 4 rows affected (0.05 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> insert into o_rollcall values(2,"vaish"),(3,"ankita"),(5,"ruchi"),(6,"sakshi");
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from n_rollcall;
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      1 | shweta |
+|      2 | vaish  |
+|      3 | priya  |
+|      4 | shiva  |
++--------+--------+
+4 rows in set (0.01 sec)
+
+mysql> select * from o_rollcall;
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      2 | vaish  |
+|      3 | ankita |
+|      5 | ruchi  |
+|      6 | sakshi |
++--------+--------+
+4 rows in set (0.00 sec)
+
+mysql> drop procedure if exists mycursor1;
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+
+mysql> delimiter //
+mysql> create procedure mycursor1()
+    begin
+    declare done int default 0;
+    declare c_rollno int;
+    declare c_name char(20);
+    declare c_studentN cursor for select rollno,name from o_rollcall where rollno not in(select rollno from n_rollcall);
+    declare continue handler for not found set done = 1;
+    begin
+    open c_studentn;
+    read_loop:loop
+    fetch c_studentn into c_rollno,c_name;
+    if done =1 then
+    leave read_loop;
+    end if;
+    insert into n_rollcall(rollno,name) values(c_rollno,c_name);
+    end loop;
+    close c_studentn;
+    end;
+    end;
+    //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> call mycursor1();
+    
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select * from n_rollcall;
+   
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      1 | shweta |
+|      2 | vaish  |
+|      3 | priya  |
+|      4 | shiva  |
+|      5 | ruchi  |
+|      6 | sakshi |
++--------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from o_rollcall;
+    -> //
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      2 | vaish  |
+|      3 | ankita |
+|      5 | ruchi  |
+|      6 | sakshi |
++--------+--------+
+4 rows in set (0.00 sec)
+
+mysql>

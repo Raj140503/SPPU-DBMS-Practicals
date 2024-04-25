@@ -1,0 +1,172 @@
+mysql> CREATE DATABASE group_7;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE group_7;
+Database changed
+mysql> CREATE TABLE students_info(
+    -> roll_no INT,
+    -> name VARCHAR(20),
+    -> sub_status VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO students_info VALUES
+    -> (1,'RAJ','NA');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO students_info VALUES
+    -> (2,'NIRAJ','NA'),
+    -> (3,'ISHWARI','NA'),
+    -> (4,'CHAITALI','NA')
+    -> ;
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM students_info;
++---------+----------+------------+
+| roll_no | name     | sub_status |
++---------+----------+------------+
+|       1 | RAJ      | NA         |
+|       2 | NIRAJ    | NA         |
+|       3 | ISHWARI  | NA         |
+|       4 | CHAITALI | NA         |
++---------+----------+------------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER TABLE students_info ADD PRIMARY KEY(roll_no);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc students_info;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| roll_no    | int         | NO   | PRI | NULL    |       |
+| name       | varchar(20) | YES  |     | NULL    |       |
+| sub_status | varchar(20) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> ALTER TABLE students_info ADD COLUMN teacher_name VARCHAR(20) DEFAULT
+'VIJAY MORE';
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM students_info;
++---------+----------+------------+--------------+
+| roll_no | name     | sub_status | teacher_name |
++---------+----------+------------+--------------+
+|       1 | RAJ      | NA         | VIJAY MORE   |
+|       2 | NIRAJ    | NA         | VIJAY MORE   |
+|       3 | ISHWARI  | NA         | VIJAY MORE   |
+|       4 | CHAITALI | NA         | VIJAY MORE   |
++---------+----------+------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE students_info SET sub_status='COMPLETED' WHERE roll_no=1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM students_info;
++---------+----------+------------+--------------+
+| roll_no | name     | sub_status | teacher_name |
++---------+----------+------------+--------------+
+|       1 | RAJ      | COMPLETED  | VIJAY MORE   |
+|       2 | NIRAJ    | NA         | VIJAY MORE   |
+|       3 | ISHWARI  | NA         | VIJAY MORE   |
+|       4 | CHAITALI | NA         | VIJAY MORE   |
++---------+----------+------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE students_info SET sub_status='COMPLETED' WHERE name='NIRAJ';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM students_info;
++---------+----------+------------+--------------+
+| roll_no | name     | sub_status | teacher_name |
++---------+----------+------------+--------------+
+|       1 | RAJ      | COMPLETED  | VIJAY MORE   |
+|       2 | NIRAJ    | COMPLETED  | VIJAY MORE   |
+|       3 | ISHWARI  | NA         | VIJAY MORE   |
+|       4 | CHAITALI | NA         | VIJAY MORE   |
++---------+----------+------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO students_info (roll_no,name,sub_status) VALUES (5,'ANUJ','NA');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM students_info;
++---------+----------+------------+--------------+
+| roll_no | name     | sub_status | teacher_name |
++---------+----------+------------+--------------+
+|       1 | RAJ      | COMPLETED  | VIJAY MORE   |
+|       2 | NIRAJ    | COMPLETED  | VIJAY MORE   |
+|       3 | ISHWARI  | NA         | VIJAY MORE   |
+|       4 | CHAITALI | NA         | VIJAY MORE   |
+|       5 | ANUJ     | NA         | VIJAY MORE   |
++---------+----------+------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> DELETE FROM students_info WHERE name='ANUJ';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM students_info;
++---------+----------+------------+--------------+
+| roll_no | name     | sub_status | teacher_name |
++---------+----------+------------+--------------+
+|       1 | RAJ      | COMPLETED  | VIJAY MORE   |
+|       2 | NIRAJ    | COMPLETED  | VIJAY MORE   |
+|       3 | ISHWARI  | NA         | VIJAY MORE   |
+|       4 | CHAITALI | NA         | VIJAY MORE   |
++---------+----------+------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE VIEW a_view AS SELECT roll_no,sub_status FROM students_info;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM a_view;
++---------+------------+
+| roll_no | sub_status |
++---------+------------+
+|       1 | COMPLETED  |
+|       2 | COMPLETED  |
+|       3 | NA         |
+|       4 | NA         |
++---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER VIEW a_view AS SELECT name FROM students_info;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM a_view;
++----------+
+| name     |
++----------+
+| RAJ      |
+| NIRAJ    |
+| ISHWARI  |
+| CHAITALI |
++----------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE a_view SET name='RAJ PATIL' WHERE name='RAJ';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM a_view;
++-----------+
+| name      |
++-----------+
+| RAJ PATIL |
+| NIRAJ     |
+| ISHWARI   |
+| CHAITALI  |
++-----------+
+4 rows in set (0.00 sec)
+
+mysql> DROP VIEW a_view;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM a_view;
+ERROR 1146 (42S02): Table 'group_7.a_view' doesn't exist
